@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,300;0,400;1,500;1,700&display=swap');
+
+body {
+    background: #f4a261 !important;
+    font-family: 'Roboto Mono', monospace;
+}
+
+body img, iframe {
+    max-width: 100%;
+}
+
+.note-group-select-from-files {
+    display: none;
+  }
+  
+
+.header {
+    text-align: center;
+}
+
+.header nav {
+    background: none !important;
+}
+
+.header nav ul li a {
+    color: #e76f51 !important;
+    font-weight: bold;
+}
+
+.header nav ul li a:hover {
+    color: #2a9d8f !important;
+    font-weight: bold;
+}
+
+.container-main {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container-main form {
+    text-align: left;
+}
+
+.container-main .form-text {
+    text-align: left;
+}
+
+.container-main button {
+    margin-top: 10px;
+    float: left;
+}
+
+.container-main .checkbox {
+    width: 5% !important;
+}
+
+.page-title {
+   color: #2a9d8f;
+   font-weight: bold;
+   text-decoration: none;
+   font-size: 40px;
+   padding-right: 20px;
+}
+
+.page-title:hover {
+    text-decoration: none;
+    color: #e76f51;
+}
+
+.post-window {
+    width: 80% !important;
+    border-top: 25px solid #e76f51;
+    border-bottom: 25px solid #e76f51;
+    background: #fff;
+    margin-top: 4%;
+    text-align: left;
+}
+
+.board-title {
+    font-size: 10px;
+    color: #2a9d8f;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+.col-title {
+    color: #2a9d8f;
+    text-decoration: underline;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.board-links ul {
+    list-style-type: none;
+}
+
+.board-links ul li a {
+    font-size: 15px;
+    color: #2a9d8f;
+    text-decoration: none;
+}
+
+.board-links ul li a:hover {
+    text-decoration: underline;
+}
+
+.post-content .title-s {
+    font-size: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e76f51;
+}
+
+.post-actions a{
+    color: #2a9d8f;
+    padding: 10px;
+}
+
+.post-actions a:hover {
+    color: #e76f51;
+}
+
+.post-actions p {
+    padding: 10px;
+    color: #2a9d8f;
+}
+
+.post-actions span {
+    color: #e76f51;
+    padding: 10px;
+}
+
+.uploaded-date {
+    float: right;
+    color: #f4a261;
+    font-weight: bold;
+}
+
+.uploaded-date span {
+    color: #000;
+}
