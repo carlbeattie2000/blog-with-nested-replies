@@ -116,20 +116,12 @@ iframe {
     padding: 10px;
 }
 
-.post-actions button {
-    background: none!important;
-    border: none;
-    padding: 0!important;
-    /*optional*/
-    font-family: arial, sans-serif;
-    /*input has OS specific font-family*/
+.post-actions a {
     color: #2a9d8f;
     padding: 10px;
-    text-decoration: underline;
-    cursor: pointer;
 }
 
-.post-actions button:hover {
+.post-actions a:hover {
     color: #e76f51;
 }
 

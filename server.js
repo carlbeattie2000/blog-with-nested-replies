@@ -141,8 +141,6 @@ app.post("/reply/send", (req, res) => {
     const comment = req.body.reply_content
     var reply_id = crypto.randomBytes(20).toString('hex');
     var date = new Date();
-    var replys = [];
-    var posts = [];
     var date_added = String(date.getDate()) + "/" + String(date.getMonth() + 1) + "/" + String(date.getFullYear()) + " " + String(date.getHours()) + ":" + String(date.getMinutes());
     if (post_id && comment) {
         db.run("INSERT INTO posts_replys(post_id, comment, upvotes, time_posted, reply_id) VALUES (?, ?, ?, ?, ?)", [post_id, comment, 0, date_added, reply_id], (err) => {
