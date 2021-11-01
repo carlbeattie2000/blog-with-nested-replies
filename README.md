@@ -34,7 +34,7 @@ Instructions on how to use them in your own application are linked below.
 
 | Plugin | README |
 | ------ | ------ |
-| Summernote | https://summernote.org/getting-started/][PlDb] |
+| Summernote | https://summernote.org/getting-started/ |
 
 ## License
 
