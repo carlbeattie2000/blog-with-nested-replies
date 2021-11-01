@@ -8,9 +8,7 @@ block content
                     h2.title-s=post.title
                     p!=post.content
                 div.post-actions
-                    form(method="POST" action="/view_post")
-                        input.hidden(name="post_id" value=post.post_id)
-                        button View
+                    a(href=`/posts/`+ post.post_id) View
                     p Reply's: #[span=post.replys_count]
                 p.uploaded-date Uploaded #[span.uploaded-span= post.time_posted]
     script(src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous")

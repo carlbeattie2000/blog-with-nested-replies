@@ -1,13 +1,13 @@
 const express = require('express'),
-    path = require('path'),
-    bodyParser = require('body-parser'),
-    PORT = process.env.PORT || 3000;
+      path = require('path'),
+      bodyParser = require('body-parser'),
+      PORT = process.env.PORT || 3000;
+      app = express();
 var sqlite3 = require('sqlite3').verbose(),
     crypto = require("crypto"),
     session = require('express-session')
 
-// App 
-const app = express();
+// App config
 app.set('view engine', 'pug')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.set('trust proxy', 1) // trust first proxy
@@ -91,8 +91,8 @@ app.post("/create_post/send", (req, res) => {
     }
 })
 
-app.post("/view_post", (req, res) => {
-    const post_id = req.body.post_id;
+app.get("/posts/:post_id", (req, res, next) => {
+    var post_id = req.params.post_id;
     var replys = [];
     var posts = []
         // get the post and store it in a dict
@@ -147,46 +147,7 @@ app.post("/reply/send", (req, res) => {
     if (post_id && comment) {
         db.run("INSERT INTO posts_replys(post_id, comment, upvotes, time_posted, reply_id) VALUES (?, ?, ?, ?, ?)", [post_id, comment, 0, date_added, reply_id], (err) => {
             if (err) throw error;
-            db.all(`SELECT * FROM main_posts WHERE post_id="${post_id}"`, [], (err, rows) => {
-                if (err) {
-                    throw err;
-                }
-                rows.forEach((row) => {
-                    var post = {
-                        post_id: row.post_id,
-                        title: row.title,
-                        content: row.content,
-                        important: row.important,
-                        upvotes: row.upvotes,
-                        replys_count: row.replys_count,
-                        time_posted: row.time_posted,
-                        deletion_data: row.deletion_date
-                    }
-
-                    posts.push(post)
-                    var new_reply_count = post.replys_count + 1;
-                    db.all(`UPDATE main_posts SET replys_count=${new_reply_count} WHERE post_id="${post.post_id}"`)
-                });
-
-                db.all(`SELECT * FROM posts_replys WHERE post_id="${post_id}"`, [], (err, rows) => {
-                    if (err) {
-                        throw err;
-                    }
-                    rows.forEach((row) => {
-                        var reply = {
-                            post_id: row.post_id,
-                            comment: row.comment,
-                            upvotes: row.upvotes,
-                            time_posted: row.time_posted,
-                            reply_id: row.reply_id
-                        }
-
-                        replys.push(reply);
-                    });
-
-                    res.render("view_post", { postlist: posts, replylist: replys })
-                });
-            });
+            res.redirect("back")
         })
     }
 })
