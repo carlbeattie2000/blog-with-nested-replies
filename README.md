@@ -38,6 +38,7 @@ Instructions on how to use them in your own application are linked below.
 | Express | https://expressjs.com/en/starter/installing.html |
 | SQLite | https://www.npmjs.com/package/sqlite3 |
 | Crypto | https://nodejs.org/api/crypto.html |
+| Pug | https://pugjs.org/api/getting-started.html |
 
 ## License
 
