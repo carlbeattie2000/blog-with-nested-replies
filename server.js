@@ -145,6 +145,13 @@ app.post("/reply/send", (req, res) => {
     if (post_id && comment) {
         db.run("INSERT INTO posts_replys(post_id, comment, upvotes, time_posted, reply_id) VALUES (?, ?, ?, ?, ?)", [post_id, comment, 0, date_added, reply_id], (err) => {
             if (err) throw error;
+            db.all(`SELECT * FROM main_posts WHERE post_id="${post_id}"`, [], (err, rows) => {
+                rows.forEach((row) => {
+                    var reply_count = row.replys_count;
+                    var new_reply_count = reply_count + 1;
+                    db.all(`UPDATE main_posts SET replys_count=${new_reply_count} WHERE post_id="${post_id}"`)
+                });
+            })
             res.redirect("back")
         })
     }
