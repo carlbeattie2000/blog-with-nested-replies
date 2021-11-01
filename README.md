@@ -35,6 +35,9 @@ Instructions on how to use them in your own application are linked below.
 | Plugin | README |
 | ------ | ------ |
 | Summernote | https://summernote.org/getting-started/ |
+| Express | https://expressjs.com/en/starter/installing.html |
+| SQLite | https://www.npmjs.com/package/sqlite3 |
+| Crypto | https://nodejs.org/api/crypto.html |
 
 ## License
 
