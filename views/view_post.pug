@@ -9,6 +9,7 @@ block content
                 p!=post.content
             .post-actions
                 p Reply's: #[span=post.replys_count]
+                a(href='/posts/report/' +post.post_id) Report
             p.uploaded-date Uploaded Today
         .container.reply-new
             form(method="POST" action="/reply/send")

@@ -42,8 +42,8 @@ const profanityPostCheck = new Task("check for bad words", () => {
             for (word in banned_words) {
                 if (post_content.includes(banned_words[word]) || post_title.includes(banned_words[word])) {
                     db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
-                        if (row.length == 0) {
-                            db.all(`INSERT INTO reported_posts(post_id, reason)`, [row.post_id, "bad word usage"])
+                        if (rows.length == 0) {
+                            db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [row.post_id, "bad word usage"])
                         }
                     })
                 }
@@ -60,52 +60,36 @@ const profanityRepliesCheck = new Task("check for bad words in replys", () => {
         "SELECT * FROM posts_replys",
         "SELECT * FROM replys_responses"
     ];
-
-    // Post main replies
-    db.all(querys[0], [], (err, rows) => {
-        rows.forEach((row) => {
-            const reply_comment = row.comment.toLowerCase();
-            for (word in sensitive_words) {
-                if (reply_comment.includes(sensitive_words[word])) {
-                    db.all(`DELETE FROM reported_posts WHERE post_id="${row.post_id}"`);
-                    db.all(`DELETE FROM posts_replys WHERE comment="${reply_comment}"`);
-                }
-            }
     
-            for (word in banned_words) {
-                if (reply_comment.includes(banned_words[word])) {
-                    db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
-                        if (rows.length == 0) {
-                            db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [row.post_id, "bad word usage in reply"])
-                        }
-                    })
-                }
-            }
-        })
-    })
+    for (const query of querys) {
+        db.all(query, [], (err, rows) => {
 
-    // Nested replies
-    db.all(querys[1], [], (err, rows) => {
-        rows.forEach((row) => {
-            const reply_comment = row.comment.toLowerCase();
-            for (word in sensitive_words) {
-                if (reply_comment.includes(sensitive_words[word])) {
-                    db.all(`DELETE FROM reported_posts WHERE post_id="${row.post_id}"`);
-                    db.all(`DELETE FROM replys_responses WHERE post_id="${row.post_id}"`);
+            rows.forEach((row) => {
+                const reply_comment = row.comment.toLowerCase();
+                const table_name = query.split("FROM ")[1];
+
+                for (word in sensitive_words) {
+                    if (reply_comment.includes(sensitive_words[word])) {
+                       if (query == querys[0]) {
+                           db.all(`DELETE FROM ${table_name} WHERE reply_id="${row.reply_id}"`)
+                       } else {
+                           db.all(`DELETE FROM ${table_name} WHERE response_id="${row.response_id}"`)
+                       }
+                    }
                 }
-            }
     
-            for (word in banned_words) {
-                if (reply_comment.includes(banned_words[word])) {
-                    db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
-                        if (rows.length < 1) {
-                            db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [row.post_id, "bad word usage in reply"])
-                        }
-                    })
+                for (word in banned_words) {
+                    if (reply_comment.includes(banned_words[word])) {
+                        db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
+                            if (rows.length == 0) {
+                                db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [row.post_id, "bad word usage in reply"])
+                            }
+                        })
+                    }
                 }
-            }
+            })
         })
-    })
+    }
 })
 
 

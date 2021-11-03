@@ -9,6 +9,7 @@ block content
                     p!=post.content
                 div.post-actions
                     a(href=`/posts/`+ post.post_id) View
+                    a(href='/posts/report/' +post.post_id) Report
                     p Reply's: #[span=post.replys_count]
                 p.uploaded-date Uploaded #[span.uploaded-span= post.time_posted]
     script(src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous")

@@ -33,7 +33,7 @@ db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content
 db.run("CREATE TABLE IF NOT EXISTS posts_replys (post_id TEXT, comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
     if (err) throw (error)
 });
-db.run("CREATE TABLE IF NOT EXISTS replys_responses (post_id TEXT, reply_id TEXT, comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
+db.run("CREATE TABLE IF NOT EXISTS replies_responses (post_id TEXT, reply_id TEXT, response_id comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
     if (err) throw (error)
 });
 db.run("CREATE TABLE IF NOT EXISTS admins (account_id TEXT, username TEXT, password TEXT)", (err) => {
@@ -185,12 +185,13 @@ app.post("/reply/reply/send", (req, res) => {
     const post_id = req.body.reply_post_id;
     const reply_id = req.body.reply_id;
     const reply_content = req.body.reply_to_reply;
+    const response_id = crypto.randomBytes(20).toString("hex");
 
     var date = new Date();
     var date_added = String(date.getDate()) + "/" + String(date.getMonth() + 1) + "/" + String(date.getFullYear()) + " " + String(date.getHours()) + ":" + String(date.getMinutes());
 
     if (post_id && reply_id && reply_content) {
-        db.run("INSERT INTO replys_responses(post_id, reply_id, comment, time_posted) VALUES (?, ?, ?, ?)", [post_id, reply_id, reply_content, date_added], (err) => {
+        db.run("INSERT INTO replys_responses(post_id, reply_id, response_id, comment, time_posted) VALUES (?, ?, ?, ?, ?)", [post_id, reply_id, response_id, reply_content, date_added], (err) => {
             if (err) throw error;
             db.all(`SELECT * FROM main_posts WHERE post_id="${post_id}"`, [], (err, rows) => {
                 rows.forEach((row) => {
@@ -205,6 +206,17 @@ app.post("/reply/reply/send", (req, res) => {
         res.send("error");
     }
 
+})
+
+
+app.get("/posts/report/:post_id", (req, res, next) => {
+    var post_id = req.params.post_id;
+    db.all(`SELECT * FROM reported_posts WHERE post_id="${post_id}"`, (err, rows) => {
+        if (rows.length == 0) {
+            db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [post_id, "user reported post"])
+        }
+    })
+    res.redirect("back")
 })
 
 app.listen(PORT, () => {
