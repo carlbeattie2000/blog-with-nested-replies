@@ -192,3 +192,42 @@ iframe {
 .hidden {
     display: none;
 }
+
+.reply_back {
+    border-top: 2px solid #e76f51;
+}
+
+.replys button {
+    display: block;
+    margin: 10px;
+    background: #e76f51;
+    border: 1px solid #e76f51;
+}
+
+.replys button:hover {
+    background: #2a9d8f;
+    border: 1px solid #2a9d8f;
+}
+
+.replys textarea {
+    width: 70%;
+    height: 5rem;
+    background: none;
+    border: 2px solid #e76f51;
+    border-radius: 4px;
+    resize: none;
+}
+
+.replys textarea:focus {
+    outline: none !important;
+    border: 2px solid #2a9d8f !important;
+    border-radius: 4px;
+}
+
+.reply_back {
+    width: 90% !important;
+    margin-top: 2%; 
+    margin-bottom: 2%;
+    margin-left: 5% !important;
+    margin-right: 5% !important;
+}

@@ -31,6 +31,9 @@ db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content
 db.run("CREATE TABLE IF NOT EXISTS posts_replys (post_id TEXT, comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
     if (err) throw (error)
 });
+db.run("CREATE TABLE IF NOT EXISTS replys_responses (post_id TEXT, reply_id TEXT, comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
+    if (err) throw (error)
+});
 db.run("CREATE TABLE IF NOT EXISTS admins (account_id TEXT, username TEXT, password TEXT)", (err) => {
         if (err) throw (error);
     })
@@ -73,10 +76,12 @@ app.post("/create_post/send", (req, res) => {
 
     if (post_important == "1") {
         post_important = true;
-        var deletion_time = String(date.getDate() + 4) + String(date.getMonth() + 1) + String(date.getHours()) + String(date.getMinutes());
+        // delete post after 48 hours if it is marked important
+        var deletion_time = 48
     } else {
         post_important = false;
-        var deletion_time = String(date.getDate() + 1) + String(date.getMonth() + 1) + String(date.getHours()) + String(date.getMinutes());
+        // delete post after 24 hours if not important
+        var deletion_time = 24
     }
 
     if (post_title && post_content) {
@@ -87,7 +92,6 @@ app.post("/create_post/send", (req, res) => {
             res.redirect("/");
         });
     } else {
-        console.log("error fields are empty");
         res.redirect("/")
     }
 })
@@ -96,8 +100,9 @@ app.get("/posts/:post_id", (req, res, next) => {
     var post_id = req.params.post_id;
     var replys = [];
     var posts = []
+    var replys_replys = [];
         // get the post and store it in a dict
-    db.all(`SELECT * FROM main_posts WHERE post_id="${post_id}"`, [], (err, rows) => {
+    db.all(`SELECT * FROM main_posts WHERE post_id="${post_id}"`, [], (err, rows) => { // Query and get the post and it's content if it exists
         if (err) {
             throw err;
         }
@@ -116,7 +121,7 @@ app.get("/posts/:post_id", (req, res, next) => {
             posts.push(post)
         });
 
-        db.all(`SELECT * FROM posts_replys WHERE post_id="${post_id}"`, [], (err, rows) => {
+        db.all(`SELECT * FROM posts_replys WHERE post_id="${post_id}"`, [], (err, rows) => { // Query and get the replys to the post
             if (err) {
                 throw err;
             }
@@ -132,7 +137,20 @@ app.get("/posts/:post_id", (req, res, next) => {
                 replys.push(reply);
             });
 
-            res.render("view_post", { postlist: posts, replylist: replys })
+            db.all(`SELECT * FROM replys_responses WHERE post_id="${post_id}"`, [], (err, rows) => { // Now get the replys to the replys
+                rows.forEach((row) => {
+                    var reply = {
+                        post_id: row.post_id,
+                        reply_id: row.reply_id,
+                        reply_comment: row.comment,
+                        time_posted: row.time_posted
+                    }
+
+                    replys_replys.push(reply);
+                })
+
+                res.render("view_post", { postlist: posts, replylist: replys, reply_to_replyList: replys_replys })
+            })
         });
     });
 })
@@ -156,6 +174,32 @@ app.post("/reply/send", (req, res) => {
             res.redirect("back")
         })
     }
+})
+
+app.post("/reply/reply/send", (req, res) => {
+    const post_id = req.body.reply_post_id;
+    const reply_id = req.body.reply_id;
+    const reply_content = req.body.reply_to_reply;
+
+    var date = new Date();
+    var date_added = String(date.getDate()) + "/" + String(date.getMonth() + 1) + "/" + String(date.getFullYear()) + " " + String(date.getHours()) + ":" + String(date.getMinutes());
+
+    if (post_id && reply_id && reply_content) {
+        db.run("INSERT INTO replys_responses(post_id, reply_id, comment, time_posted) VALUES (?, ?, ?, ?)", [post_id, reply_id, reply_content, date_added], (err) => {
+            if (err) throw error;
+            db.all(`SELECT * FROM main_posts WHERE post_id="${post_id}"`, [], (err, rows) => {
+                rows.forEach((row) => {
+                    var reply_count = row.replys_count;
+                    var new_reply_count = reply_count + 1;
+                    db.all(`UPDATE main_posts SET replys_count=${new_reply_count} WHERE post_id="${post_id}"`)
+                });
+            })
+            res.redirect("back")
+        })
+    } else {
+        res.send("error");
+    }
+
 })
 
 app.listen(PORT, () => {

@@ -1,5 +1,6 @@
 extends layout.pug
 block content
+    // %POST START% //
     for post in postlist
         .container.view-post
             h1.board-title Post #[span=post.post_id]
@@ -14,10 +15,31 @@ block content
                 input(value=post.post_id style="display: none;" name="post_id")
                 textarea(placeholder="Enter your reply" name="reply_content")
                 button.btn.btn-primary(type="submit") Reply
+    // %POST CONTENT END% //
+
+    // %REPLY START% //
     for reply in replylist
         .container-sm.replys
-            h3 Comment #[span=reply.reply_id]
+            h3 Reply #[span=reply.reply_id]
             p=reply.comment
             span=reply.time_posted
+
+            // %REPLYS TO REPLYS START% //
+            for reply_r in reply_to_replyList
+                if reply_r.reply_id == reply.reply_id
+                    .container-sm.replys.reply_back
+                        h3 Replying to #[span=reply.reply_id]
+                        p=reply_r.reply_comment
+                        span=reply.time_posted
+
+            // %REPLYS TO REPLYS END% //
+            form(method="POST" action="/reply/reply/send")
+                input(value=reply.post_id style="display: none;" name="reply_post_id")
+                input(value=reply.reply_id style="display: none;" name="reply_id")
+                textarea(placeholder="Enter reply" name="reply_to_reply")
+                button.btn.btn-primary(type="submit") Reply
+    // %REPLY END% //
+
+    // %POST END% //
 
         
