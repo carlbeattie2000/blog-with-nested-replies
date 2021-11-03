@@ -13,7 +13,7 @@ A simple blog page, inspired a little by the likes of 4chan. Nothing impressive 
 
 - Post without having to login and remain anonymous
 - Add images, videos and edit your text when creating a new post
-- Post's by default are deleted after 24 Hours.(planned)
+- Post's by default are deleted after 24 Hours.(added)
 - Reply to posts anonymously
 
 ## Installation
