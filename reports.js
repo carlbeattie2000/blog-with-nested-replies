@@ -10,8 +10,7 @@ var banned_words = ["kill",
                     "wanker", 
                     "cunt",
                     "assfuck",
-                    "asslicker",
-                    "twat"]
+                    "asslicker"]
 
 var sensitive_words = ["mong",
                        "retard",
@@ -19,7 +18,8 @@ var sensitive_words = ["mong",
                        "poof",
                        "Queer",
                        "fagget",
-                       "faggot"]
+                       "faggot",
+                       "twat"]
 
 // Setup the scheduler
 const scheduler = new ToadScheduler();
@@ -67,15 +67,16 @@ const profanityRepliesCheck = new Task("check for bad words in replys", () => {
             const reply_comment = row.comment.toLowerCase();
             for (word in sensitive_words) {
                 if (reply_comment.includes(sensitive_words[word])) {
-                    db.all(`DELETE FROM posts_replys WHERE comment="${reply_comment}"`)
+                    db.all(`DELETE FROM reported_posts WHERE post_id="${row.post_id}"`);
+                    db.all(`DELETE FROM posts_replys WHERE comment="${reply_comment}"`);
                 }
             }
     
             for (word in banned_words) {
                 if (reply_comment.includes(banned_words[word])) {
                     db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
-                        if (row.length == 0) {
-                            db.all(`INSERT INTO reported_posts(post_id, reason)`, [row.post_id, "bad word usage in reply"])
+                        if (rows.length == 0) {
+                            db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [row.post_id, "bad word usage in reply"])
                         }
                     })
                 }
@@ -89,15 +90,16 @@ const profanityRepliesCheck = new Task("check for bad words in replys", () => {
             const reply_comment = row.comment.toLowerCase();
             for (word in sensitive_words) {
                 if (reply_comment.includes(sensitive_words[word])) {
-                    db.all(`DELETE FROM replys_responses WHERE comment="${reply_comment}"`)
+                    db.all(`DELETE FROM reported_posts WHERE post_id="${row.post_id}"`);
+                    db.all(`DELETE FROM replys_responses WHERE post_id="${row.post_id}"`);
                 }
             }
     
             for (word in banned_words) {
                 if (reply_comment.includes(banned_words[word])) {
                     db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
-                        if (row.length == 0) {
-                            db.all(`INSERT INTO reported_posts(post_id, reason)`, [row.post_id, "bad word usage in reply"])
+                        if (rows.length < 1) {
+                            db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [row.post_id, "bad word usage in reply"])
                         }
                     })
                 }
