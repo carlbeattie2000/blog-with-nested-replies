@@ -11,15 +11,15 @@ var banned_words = ["kill",
                     "cunt",
                     "assfuck",
                     "asslicker",
-                    "twat",
-                    "fagget",
-                    "faggot"]
+                    "twat"]
 
 var sensitive_words = ["mong",
                        "retard",
                        "spastic",
                        "poof",
-                       "Queer"]
+                       "Queer",
+                       "fagget",
+                       "faggot"]
 
 // Setup the scheduler
 const scheduler = new ToadScheduler();
