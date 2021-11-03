@@ -5,7 +5,8 @@ const express = require('express'),
       app = express();
 var sqlite3 = require('sqlite3').verbose(),
     crypto = require("crypto"),
-    session = require('express-session')
+    session = require('express-session'),
+    scheduler = require('./tasks_on_timer')
 
 // App config
 app.set('view engine', 'pug')
@@ -24,7 +25,7 @@ app.use(session({
 var db = new sqlite3.Database('./db/blogs.db');
 
 // CREATE DATABASE TABLES
-db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content TEXT, important INTEGER, upvotes INTEGER, replys_count INTEGER, time_posted TEXT, deletion_date TEXT)", (err) => {
+db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content TEXT, important INTEGER, upvotes INTEGER, replys_count INTEGER, time_posted TEXT, timeSincePosted INTEGER, deletion_date INTEGER)", (err) => {
     if (err) throw (error)
 });
 db.run("CREATE TABLE IF NOT EXISTS posts_replys (post_id TEXT, comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
