@@ -15,6 +15,8 @@ A simple blog page, inspired a little by the likes of 4chan. Nothing impressive 
 - Add images, videos and edit your text when creating a new post
 - Post's by default are deleted after 24 Hours.(added)
 - Reply to posts anonymously
+- Nested replies
+- Simple profanity filter with two categories, soft | hard. (soft is flagged for manual review, hard is instantly deleted)
 
 ## Installation
 
