@@ -3,10 +3,12 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       PORT = process.env.PORT || 3000;
       app = express();
+
 var sqlite3 = require('sqlite3').verbose(),
     crypto = require("crypto"),
     session = require('express-session'),
     scheduler = require('./tasks_on_timer')
+    report = require('./reports')
 
 // App config
 app.set('view engine', 'pug')
@@ -36,7 +38,10 @@ db.run("CREATE TABLE IF NOT EXISTS replys_responses (post_id TEXT, reply_id TEXT
 });
 db.run("CREATE TABLE IF NOT EXISTS admins (account_id TEXT, username TEXT, password TEXT)", (err) => {
         if (err) throw (error);
-    })
+});
+db.run("CREATE TABLE IF NOT EXISTS reported_posts (post_id TEXT, reason TEXT)", (err) => {
+    if (err) throw (error);
+});
 // END CREATE DATABASE TABLES
 
 app.get("/", (req, res) => { // Main home page, where all recent posts are displayed
