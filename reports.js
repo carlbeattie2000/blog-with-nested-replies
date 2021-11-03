@@ -107,7 +107,7 @@ const profanityRepliesCheck = new Task("check for bad words in replys", () => {
 })
 
 
-// Run the tasks every one minute
+// Run the tasks every minute
 const runProfanityCheck = new SimpleIntervalJob({minutes: 1}, profanityPostCheck);
 const runRepliesProfanityCheck = new SimpleIntervalJob({minutes: 1}, profanityRepliesCheck);
 
