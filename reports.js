@@ -25,7 +25,7 @@ var sensitive_words = ["mong",
 const scheduler = new ToadScheduler();
 
 // Search through every post and reply and auto report those that get flagged, and if they contain and word in the very sensitive category then it is a auto delete.
-const profanityCheck = new Task("check for bad words", () => {
+const profanityPostCheck = new Task("check for bad words", () => {
     // Query the posts
     const query = "SELECT * FROM main_posts"
     db.all(query, [], (err, rows) => {
@@ -52,9 +52,65 @@ const profanityCheck = new Task("check for bad words", () => {
     })
 })
 
+// Search through every reply and nested reply and auto report those that get flagged, and if they contain an word in the very sensitive category then it is a auto delete.
+// UPDATE THIS SO THE REPLIES HAVE THERE OWN TABLE
+
+const profanityRepliesCheck = new Task("check for bad words in replys", () => {
+    const querys = [
+        "SELECT * FROM posts_replys",
+        "SELECT * FROM replys_responses"
+    ];
+
+    // Post main replies
+    db.all(querys[0], [], (err, rows) => {
+        rows.forEach((row) => {
+            const reply_comment = row.comment.toLowerCase();
+            for (word in sensitive_words) {
+                if (reply_comment.includes(sensitive_words[word])) {
+                    db.all(`DELETE FROM posts_replys WHERE comment="${reply_comment}"`)
+                }
+            }
+    
+            for (word in banned_words) {
+                if (reply_comment.includes(banned_words[word])) {
+                    db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
+                        if (row.length == 0) {
+                            db.all(`INSERT INTO reported_posts(post_id, reason)`, [row.post_id, "bad word usage in reply"])
+                        }
+                    })
+                }
+            }
+        })
+    })
+
+    // Nested replies
+    db.all(querys[1], [], (err, rows) => {
+        rows.forEach((row) => {
+            const reply_comment = row.comment.toLowerCase();
+            for (word in sensitive_words) {
+                if (reply_comment.includes(sensitive_words[word])) {
+                    db.all(`DELETE FROM replys_responses WHERE comment="${reply_comment}"`)
+                }
+            }
+    
+            for (word in banned_words) {
+                if (reply_comment.includes(banned_words[word])) {
+                    db.all(`SELECT * FROM reported_posts WHERE post_id="${row.post_id}"`, (err, rows) => {
+                        if (row.length == 0) {
+                            db.all(`INSERT INTO reported_posts(post_id, reason)`, [row.post_id, "bad word usage in reply"])
+                        }
+                    })
+                }
+            }
+        })
+    })
+})
+
 
 // Run the tasks every one minute
-const runProfanityCheck = new SimpleIntervalJob({minutes: 1}, profanityCheck);
+const runProfanityCheck = new SimpleIntervalJob({minutes: 1}, profanityPostCheck);
+const runRepliesProfanityCheck = new SimpleIntervalJob({minutes: 1}, profanityRepliesCheck);
 
 
 scheduler.addSimpleIntervalJob(runProfanityCheck);
+scheduler.addSimpleIntervalJob(runRepliesProfanityCheck);
