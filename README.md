@@ -17,6 +17,7 @@ A simple blog page, inspired a little by the likes of 4chan. Nothing impressive 
 - Reply to posts anonymously
 - Nested replies
 - Simple profanity filter with two categories, soft | hard. (soft is flagged for manual review, hard is instantly deleted)
+- Pagination
 
 ## Installation
 
