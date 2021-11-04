@@ -16,7 +16,7 @@ var sensitive_words = ["mong",
                        "retard",
                        "spastic",
                        "poof",
-                       "Queer",
+                       "queer",
                        "fagget",
                        "faggot",
                        "twat"]

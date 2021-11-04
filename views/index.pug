@@ -12,6 +12,22 @@ block content
                     a(href='/posts/report/' +post.post_id) Report
                     p Reply's: #[span=post.replys_count]
                 p.uploaded-date Uploaded #[span.uploaded-span= post.time_posted]
+        <div class="pagination">
+            -for (var x = 0; x < page_limit; x++)
+                // vars to handle pagination limit and active links
+                -var page_num = x + 1
+                -var page_render_limit = parseInt(page) + 8
+                -var current_page = page
+                
+                // Conditional statements to handle if the page is display the correct amount of pagination's and is it active
+                if (current_page > 0)
+                    -var page_render_limit_min = parseInt(current_page) - 3
+                    if (x < page_limit && x < page_render_limit && x > page_render_limit_min)
+                        if (page_num == current_page)
+                            a(href='/?page='+page_num class="active") #[span=page_num]
+                        else
+                            a(href='/?page='+page_num) #[span=page_num]
+        </div>
     script(src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous")
     script(src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous")

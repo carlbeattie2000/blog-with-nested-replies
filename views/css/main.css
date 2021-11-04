@@ -231,3 +231,25 @@ iframe {
     margin-left: 5% !important;
     margin-right: 5% !important;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    display: inline-block;
+    margin: 50px;
+}
+  
+  .pagination a {
+    color: #e76f51;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+  }
+  
+  .pagination a.active {
+    background-color: #e76f51;
+    color: #2a9d8f;
+  }
+  
+  .pagination a:hover:not(.active) {background-color: #ddd; color: #2a9d8f;}

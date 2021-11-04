@@ -46,8 +46,23 @@ db.run("CREATE TABLE IF NOT EXISTS reported_posts (post_id TEXT, reason TEXT)", 
 
 app.get("/", (req, res) => { // Main home page, where all recent posts are displayed
     var posts_list = []; // Store all the posts inside here
+    // limit 4
+    const limit = 4;
 
-    db.all("SELECT * FROM main_posts", [], (err, rows) => {
+    // page number
+    var page = req.query.page;
+
+    if (page == null) {
+        page = 1
+    }
+
+    // calculate offset
+    const offset = (page - 1) * limit;
+
+    // query for fetching data with page number and offset
+    const prodsQuery = "SELECT * FROM main_posts limit "+limit+" OFFSET "+offset
+
+    db.all(prodsQuery, [], (error, rows) => {
         rows.forEach((row) => {
             var post = {
                 post_id: row.post_id,
@@ -63,7 +78,14 @@ app.get("/", (req, res) => { // Main home page, where all recent posts are displ
             posts_list.push(post)
         })
 
-        res.render("index", { postlist: posts_list })
+        if (rows.length < 1) {
+            res.redirect("/posts?page=1")
+        }
+        
+        db.all("SELECT * FROM main_posts", (err, rows) => {
+            const page_limit = Math.ceil(rows.length / limit);
+            res.render("index", {postlist: posts_list, page_limit, page})
+        })
     })
 })
 
