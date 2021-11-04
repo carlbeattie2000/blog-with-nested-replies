@@ -1,7 +1,10 @@
 extends layout.pug
 block content
     // %POST START% //
+    -var areRepliesClosed = false
+
     for post in postlist
+        -areRepliesClosed = post.areRepliesClosed;
         .container.view-post
             h1.board-title Post #[span=post.post_id]
             .post-content
@@ -10,12 +13,14 @@ block content
             .post-actions
                 p Reply's: #[span=post.replys_count]
                 a(href='/posts/report/' +post.post_id) Report
-            p.uploaded-date Uploaded Today
-        .container.reply-new
-            form(method="POST" action="/reply/send")
-                input(value=post.post_id style="display: none;" name="post_id")
-                textarea(placeholder="Enter your reply" name="reply_content")
-                button.btn.btn-primary(type="submit") Reply
+                if isLoggedIn
+                     a(href='/admin/close-replies/' +post.post_id) Close Replies
+        .container.container-reply.reply-new
+            unless areRepliesClosed
+                form(method="POST" action="/reply/send")
+                    input(value=post.post_id style="display: none;" name="post_id")
+                    textarea(placeholder="Enter your reply" name="reply_content")
+                    button.btn.btn-primary(type="submit") Reply
     // %POST CONTENT END% //
 
     // %REPLY START% //
@@ -24,6 +29,8 @@ block content
             h3 Reply #[span=reply.reply_id]
             p=reply.comment
             span=reply.time_posted
+            if isLoggedIn
+                a(href='/admin/delete-reply' +reply.post_id) Delete Reply
 
             // %REPLYS TO REPLYS START% //
             for reply_r in reply_to_replyList
@@ -32,14 +39,22 @@ block content
                         h3 Replying to #[span=reply.reply_id]
                         p=reply_r.reply_comment
                         span=reply.time_posted
+                        if isLoggedIn
+                            a(href='/admin/delete-reply' +reply_r.post_id) Delete Reply
 
             // %REPLYS TO REPLYS END% //
-            form(method="POST" action="/reply/reply/send")
-                input(value=reply.post_id style="display: none;" name="reply_post_id")
-                input(value=reply.reply_id style="display: none;" name="reply_id")
-                textarea(placeholder="Enter reply" name="reply_to_reply")
-                button.btn.btn-primary(type="submit") Reply
+            unless areRepliesClosed
+                form(method="POST" action="/reply/reply/send")
+                    input(value=reply.post_id style="display: none;" name="reply_post_id")
+                    input(value=reply.reply_id style="display: none;" name="reply_id")
+                    textarea(placeholder="Enter reply" name="reply_to_reply")
+                    button.btn.btn-primary(type="submit") Reply
     // %REPLY END% //
+
+    .container
+        if areRepliesClosed
+            .flash.alert.alert-warning
+                h3 replies are closed on this post
 
     // %POST END% //
 

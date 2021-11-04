@@ -10,6 +10,8 @@ block content
                 div.post-actions
                     a(href=`/posts/`+ post.post_id) View
                     a(href='/posts/report/' +post.post_id) Report
+                    if isLoggedIn
+                         a(href='/admin/delete-post/' +post.post_id) Delete
                     p Reply's: #[span=post.replys_count]
                 p.uploaded-date Uploaded #[span.uploaded-span= post.time_posted]
         <div class="pagination">

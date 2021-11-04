@@ -1,0 +1,7 @@
+extends layout.pug
+block content                
+    div.container-xxl.container-login
+        form(method="POST" action="/login/auth")
+            input(type="email" placeholder="Email" class="login-input" name="email" required)
+            input(type="password" placeholder="Password" class="login-input" name="password" required)
+            button.btn-login(type="submit") Login

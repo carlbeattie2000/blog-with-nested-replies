@@ -7,27 +7,28 @@ const express = require('express'),
 var sqlite3 = require('sqlite3').verbose(),
     crypto = require("crypto"),
     session = require('express-session'),
-    scheduler = require('./tasks_on_timer')
-    report = require('./reports')
+    scheduler = require('./tasks_on_timer'),
+    report = require('./reports'),
+    admin = require('./admin')
 
 // App config
 app.set('view engine', 'pug')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.set('trust proxy', 1) // trust first proxy
 app.use(bodyParser.json());
+app.use("/", admin);
 // Session
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-  }))
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
 
 // DB init
 var db = new sqlite3.Database('./db/blogs.db');
 
 // CREATE DATABASE TABLES
-db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content TEXT, important INTEGER, upvotes INTEGER, replys_count INTEGER, time_posted TEXT, timeSincePosted INTEGER, deletion_date INTEGER)", (err) => {
+db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content TEXT, important INTEGER, replys_count INTEGER, time_posted TEXT, timeSincePosted INTEGER, deletion_date INTEGER, areRepliesClosed INTEGER)", (err) => {
     if (err) throw (error)
 });
 db.run("CREATE TABLE IF NOT EXISTS posts_replys (post_id TEXT, comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
@@ -45,6 +46,7 @@ db.run("CREATE TABLE IF NOT EXISTS reported_posts (post_id TEXT, reason TEXT)", 
 // END CREATE DATABASE TABLES
 
 app.get("/", (req, res) => { // Main home page, where all recent posts are displayed
+    const isLoggedIn = req.session.loggedin
     var posts_list = []; // Store all the posts inside here
     // limit 4
     const limit = 4;
@@ -84,7 +86,7 @@ app.get("/", (req, res) => { // Main home page, where all recent posts are displ
         
         db.all("SELECT * FROM main_posts", (err, rows) => {
             const page_limit = Math.ceil(rows.length / limit);
-            res.render("index", {postlist: posts_list, page_limit, page})
+            res.render("index", {postlist: posts_list, page_limit, page, isLoggedIn })
         })
     })
 })
@@ -142,9 +144,9 @@ app.get("/posts/:post_id", (req, res, next) => {
                 upvotes: row.upvotes,
                 replys_count: row.replys_count,
                 time_posted: row.time_posted,
-                deletion_data: row.deletion_date
+                deletion_data: row.deletion_date,
+                areRepliesClosed: row.areRepliesClosed
             }
-
             posts.push(post)
         });
 
@@ -176,7 +178,7 @@ app.get("/posts/:post_id", (req, res, next) => {
                     replys_replys.push(reply);
                 })
 
-                res.render("view_post", { postlist: posts, replylist: replys, reply_to_replyList: replys_replys })
+                res.render("view_post", { postlist: posts, replylist: replys, reply_to_replyList: replys_replys, isLoggedIn: req.session.loggedin})
             })
         });
     });
