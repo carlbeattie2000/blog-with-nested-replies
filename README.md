@@ -2,6 +2,12 @@
 
 [![N|Solid](https://global.download.synology.com/download/Package/img/Node.js_v12/12.20.1-0021/thumb_256.png)](https://nodesource.com/products/nsolid)
 
+# Admin dashboard
+
+Goto the link /login and enter the infomation bellow
+- EMAIL: admin@4head.com
+- PASSWORD: admin
+
 A simple blog page, inspired a little by the likes of 4chan. Nothing impressive just an idea i wanted to create.
 
 - Nodejs
