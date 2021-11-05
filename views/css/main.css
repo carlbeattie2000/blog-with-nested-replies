@@ -1,3 +1,7 @@
+/* PS I AM VERY VERY VERY BAD WITH ANYTHING THAT INCLUDES ART, AND ESPECIALLY CSS CANT SEEM TO GRASP IT.
+   So erm maybe just maybe don't read anything in here please and thanks. :)
+*/
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,300;0,400;1,500;1,700&display=swap');
 body, html {
     background: #f4a261 !important;
@@ -353,4 +357,135 @@ input.login-input:-webkit-autofill:active  {
 
 .container-reply {
     margin-top: 20px;
+}
+
+.container-stats {
+    display: flex;
+    margin: auto;
+    width: 90%;
+    justify-content: space-around;
+    max-width: 100%;
+    background: #fff;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    padding: 20px;
+    border: 1px solid #2a9d8f;
+}
+
+.stat-item {
+    padding: 40px;
+    text-align: center;
+    flex: 2 1 auto;
+    border: 2px solid #e76f51;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    background: #f4a36170;
+}
+
+.stat-item h1 {
+    color: #e76f51;
+    font-size: 20px;
+}
+
+.stat-item p {
+    font-size: 30px;
+    font-weight: 500;
+    color: #2a9d8f;
+}
+
+.container-reports {
+    margin: auto;
+    margin-top: 50px;
+    width: 90%;
+    justify-content: flex-start;
+    max-width: 100%;
+    background: #fff;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    padding: 20px;
+    border: 1px solid #2a9d8f;
+}
+
+.container-reports h1 {
+    font-size: 25px;
+}
+
+.container-reports p {
+    font-weight: 500;
+    font-size: 30px;
+}
+
+.container-reports a {
+    text-decoration: none;
+    padding: 10px;
+    margin: 20px;
+    margin-left: 0;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    color: #fff;
+}
+
+.danger {
+    background: rgba(252, 0, 0, 0.981);
+    transition: all 0.6s;
+    -webkit-transition: all 0.6s;
+    -moz-transition: all 0.6s;
+    -ms-transition: all 0.6s;
+    -o-transition: all 0.6s;
+}
+
+.danger:hover {
+    background: rgba(167, 24, 24, 0.981);
+    color: #fff;
+}
+
+.success {
+    background: rgb(8, 192, 8);
+    transition: all 0.6s;
+    -webkit-transition: all 0.6s;
+    -moz-transition: all 0.6s;
+    -ms-transition: all 0.6s;
+    -o-transition: all 0.6s;
+}
+
+.success:hover {
+    background: rgb(41, 135, 41);
+    color: #fff;
+}
+
+.warning {
+    background: rgb(230, 154, 13);
+    transition: all 0.6s;
+    -webkit-transition: all 0.6s;
+    -moz-transition: all 0.6s;
+    -ms-transition: all 0.6s;
+    -o-transition: all 0.6s;
+}
+
+.warning:hover {
+    background: rgb(165, 119, 32);
+    color: #fff;
+}
+
+@media only screen and (max-width: 600px) {
+    .container-reports a {
+        display: block !important;
+        text-align: center;
+    }
 }

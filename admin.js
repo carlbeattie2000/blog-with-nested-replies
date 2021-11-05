@@ -38,7 +38,21 @@ router.post("/login/auth", (req, res) => {
 
 router.get("/admin-dashboard", (req, res) => {
     if (req.session.loggedin) {
-        res.render("admin_dashboard")
+        var stats = [];
+        
+        var query = "SELECT * FROM website_stats"
+        db.all(query, [], (err, results) => {
+            if (err) throw error;
+            results.forEach((row) => {
+                var stat_object = {
+                    posts: row.posts_count,
+                    replies: row.replies_count
+                }
+
+                stats.push(stat_object)
+            })
+            res.render("admin_dashboard", {main_stats: stats})
+        })
     } else {
         res.redirect("/")
     }
@@ -56,16 +70,12 @@ router.get("/admin/close-replies/:post_id", (req, res, next) => {
 // Give the admin the ability to delete a post that they think breaks tos/rules
 router.get("/admin/delete-post/:post_id", (req, res, next) => {
     const post_id = req.params.post_id;
-    console.log(post_id)
     const query = `DELETE FROM main_posts WHERE post_id="${post_id}"`;
     db.all(query, (err) => {
-        console.log("hi")
         const query = `DELETE FROM posts_replys WHERE post_id="${post_id}"`;
         db.all(query, (err) => {
-            console.log("hi 2")
             const query = `DELETE FROM replys_responses WHERE post_id="${post_id}"`;
             db.all(query, (err) => {
-                console.log("hi 3")
                 res.redirect("back")
             })
         })

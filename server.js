@@ -28,21 +28,14 @@ app.use(session({
 var db = new sqlite3.Database('./db/blogs.db');
 
 // CREATE DATABASE TABLES
-db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content TEXT, important INTEGER, replys_count INTEGER, time_posted TEXT, timeSincePosted INTEGER, deletion_date INTEGER, areRepliesClosed INTEGER)", (err) => {
-    if (err) throw (error)
+db.run("CREATE TABLE IF NOT EXISTS main_posts (post_id TEXT, title TEXT, content TEXT, important INTEGER, replys_count INTEGER, time_posted TEXT, timeSincePosted INTEGER, deletion_date INTEGER, areRepliesClosed INTEGER)", (err) => { if (err) throw (error)
 });
-db.run("CREATE TABLE IF NOT EXISTS posts_replys (post_id TEXT, comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
-    if (err) throw (error)
-});
-db.run("CREATE TABLE IF NOT EXISTS replies_responses (post_id TEXT, reply_id TEXT, response_id comment TEXT, upvotes INTEGER, time_posted TEXT)", (err) => {
-    if (err) throw (error)
-});
-db.run("CREATE TABLE IF NOT EXISTS admins (account_id TEXT, username TEXT, password TEXT)", (err) => {
-        if (err) throw (error);
-});
-db.run("CREATE TABLE IF NOT EXISTS reported_posts (post_id TEXT, reason TEXT)", (err) => {
-    if (err) throw (error);
-});
+db.run("CREATE TABLE IF NOT EXISTS posts_replys (post_id TEXT, comment TEXT, time_posted TEXT)", (err) => { if (err) throw (error) });
+db.run("CREATE TABLE IF NOT EXISTS replies_responses (post_id TEXT, reply_id TEXT, response_id comment TEXT, time_posted TEXT)", (err) => { if (err) throw (error) });
+db.run("CREATE TABLE IF NOT EXISTS admins (account_id TEXT, username TEXT, password TEXT)", (err) => { if (err) throw (error) });
+db.run("CREATE TABLE IF NOT EXISTS reported_posts (post_id TEXT, reason TEXT)", (err) => { if (err) throw (error) });
+// create a table to store the count of posts and replies
+db.run("CREATE TABLE IF NOT EXISTS website_stats (posts_count INTEGER, replies_count INTEGER)", (err) => { if (err) throw error })
 // END CREATE DATABASE TABLES
 
 app.get("/", (req, res) => { // Main home page, where all recent posts are displayed
