@@ -483,6 +483,15 @@ input.login-input:-webkit-autofill:active  {
     color: #fff;
 }
 
+.container-reports details {
+    margin-bottom: 30px;
+}
+
+.flag {
+    font-size: 10px !important;
+    font-weight: 500;
+}
+
 @media only screen and (max-width: 600px) {
     .container-reports a {
         display: block !important;

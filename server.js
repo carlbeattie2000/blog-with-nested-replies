@@ -228,9 +228,19 @@ app.post("/reply/reply/send", (req, res) => {
 
 app.get("/posts/report/:post_id", (req, res, next) => {
     var post_id = req.params.post_id;
+    var posts = []
     db.all(`SELECT * FROM reported_posts WHERE post_id="${post_id}"`, (err, rows) => {
         if (rows.length == 0) {
-            db.all(`INSERT INTO reported_posts(post_id, reason) VALUES (?, ?)`, [post_id, "user reported post"])
+            db.all(`SELECT * FROM main_posts WHERE post_id="${post_id}"`, (err, rows) => {
+                rows.forEach((row) => {
+                    var post = {
+                        title: row.title,
+                        content: row.content
+                    }
+                    posts.push(post)
+                })
+                db.all(`INSERT INTO reported_posts(post_id, reason, post_title, post_content) VALUES (?, ?, ?, ?)`, [post_id, "user reported post", posts[0].title, posts[0].content])
+            })
         }
     })
     res.redirect("back")

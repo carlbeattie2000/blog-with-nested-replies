@@ -8,12 +8,16 @@ block content
             .stat-item
                 h1 Total Replies
                 p.number=stat.replies
-    .container-reports
-        h1 post title
-        p post content
-        a.success(href="#") approve post
-        a.danger(href="#") remove post
-        a.warning(href="#") close replies
+    for post in posts
+        .container-reports
+            h1=post.title
+            p.flag Flagged Reason: #[span=post.reason]
+            details
+                summary Post Content
+                p!=post.content
+            a.success(href="/admin/approve-post/" +post.post_id) approve post
+            a.danger(href='/admin/delete-post/' +post.post_id) remove post
+            a.warning(href='/admin/close-replies/' +post.post_id) close replies
     script(src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous")
     script(src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous")
